@@ -1,25 +1,17 @@
+import matter from "gray-matter";
 import Image from "next/image";
-
-interface Article {
-  id: number;
-  title: string;
-  slug: string;
-  published_at: string;
-  emoji: string;
-  path: string;
-  user: {
-    username: string;
-    name: string;
-  };
-}
+import Link from "next/link";
 
 export default async function Home() {
-  // 一度の取得件数の制限にかからない程の記事数しかないのでループ処理はしてない
-  const res = await fetch(
-    "https://zenn.dev/api/articles?username=hirospark&order=latest"
-  );
-  const data = await res.json();
-  const articles: Article[] = data.articles;
+  const list = await fetch(
+    "https://api.github.com/repos/HiroSpark/articles/contents/articles/",
+  ).then((res) => res.json());
+  const meta = await Promise.all(list.map(async (file) => {
+    const id = file.name.split(".")[0]
+    const markdown = await fetch(file.download_url).then(res => res.text())
+    const { data } = matter(markdown)
+    return { id, data }
+  }));
   return (
     <div className="flex min-h-screen items-center justify-center font-sans bg-zinc-100">
       <main className="max-w-xl min-h-screen w-full mx-6">
@@ -51,15 +43,15 @@ export default async function Home() {
 
         {/* featured articles */}
         <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-7">
-          {articles.map((article) => {
-            const url = "https://zenn.dev" + article.path;
+          {meta.map(({ id, data }) => {
+            const url = "/blog/" + id;
             return (
-              <li key={article.id}>
-                <a
+              <li key={id}>
+                <Link
                   href={url}
                   className="flex flex-row gap-1 justify-between items-start h-full p-4 rounded-xl border-1 border-zinc-400 bg-white font-semibold hover:bg-zinc-50 hover:border-zinc-600"
                 >
-                  <span>{article.title}</span>
+                  <span>{data.title}</span>
                   <Image
                     src="/arrow-right-circle.svg"
                     alt=""
@@ -67,7 +59,7 @@ export default async function Home() {
                     width={24}
                     height={24}
                   />
-                </a>
+                </Link>
               </li>
             );
           })}
