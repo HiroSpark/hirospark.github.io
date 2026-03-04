@@ -7,6 +7,12 @@ import "./globals.css";
 export default async function Home() {
   const list = await fetch(
     "https://api.github.com/repos/HiroSpark/articles/contents/articles/",
+    {
+      cache: "force-cache",
+      headers: {
+        Authorization: "Bearer " + process.env.GH_TOKEN,
+      },
+    },
   ).then((res) => res.json());
   const meta = await Promise.all(
     list.map(async (file) => {
@@ -18,7 +24,6 @@ export default async function Home() {
   );
   return (
     <div>
-
       <div className="my-12">
         <p className="mb-4">Webや組版について興味があります。</p>
         <div className="font-semibold flex gap-6">

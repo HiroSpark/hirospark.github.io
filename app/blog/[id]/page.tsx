@@ -44,6 +44,12 @@ const zennBlockParser = () => {
 export async function generateStaticParams() {
   const posts = await fetch(
     "https://api.github.com/repos/HiroSpark/articles/contents/articles/",
+    {
+      cache: "force-cache",
+      headers: {
+        Authorization: "Bearer " + process.env.GH_TOKEN,
+      },
+    },
   ).then((res) => res.json());
   return posts.map((post) => {
     const id = post.name.split(".")[0];
