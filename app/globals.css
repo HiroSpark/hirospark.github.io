@@ -25,6 +25,31 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-pre {
-  overflow-x: scroll;
+/* 記事ページ用 */
+
+.content {
+  h1 {
+    @apply text-xl my-4 font-bold;
+  }
+
+  h2 {
+    @apply text-base my-3 font-bold;
+  }
+  
+  pre {
+    overflow-x: scroll;
+    @apply my-4 p-4 rounded-xl;
+  }
+
+  code {
+    @apply text-sm;
+  }
+
+  a {
+    @apply underline;
+  }
+
+  hr {
+    @apply my-8;
+  }
 }

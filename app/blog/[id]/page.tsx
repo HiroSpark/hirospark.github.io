@@ -5,6 +5,7 @@ import remarkGfm from "remark-gfm";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 import rehypeShiki from "@shikijs/rehype";
+import Image from "next/image";
 
 // zenn独自記法に対応するパーサー（昔書いたもののコピー）
 
@@ -93,8 +94,34 @@ export default async function Page({
 
   return (
     <div>
-      <h1 className="text-2xl font-bold">{data.title}</h1>
-      <div dangerouslySetInnerHTML={{ __html: html }} />
+      <h1 className="text-2xl font-bold mb-6">{data.title}</h1>
+      <article dangerouslySetInnerHTML={{ __html: html }} className="content"/>
+      <footer className="my-8">
+        <div className="font-semibold flex gap-6">
+          <p>
+            <a
+              href="https://zenn.dev/hirospark"
+              target="_blank"
+              rel="noopener noreferer"
+              className="flex gap-1 flex-row items-center transition delay-10 duration-200 ease-[ease] hover:transform-[translateX(4px)]"
+            >
+              <Image src="/arrow-right.svg" alt="" height={18} width={18} />
+              Zenn
+            </a>
+          </p>
+          <p>
+            <a
+              href="https://github.com/HiroSpark"
+              target="_blank"
+              rel="noopener noreferer"
+              className="flex gap-1 flex-row items-center transition delay-100 duration-200 ease-[ease] hover:transform-[translateX(4px)]"
+            >
+              <Image src="/arrow-right.svg" alt="" height={18} width={18} />
+              GitHub
+            </a>
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }
