@@ -23,7 +23,7 @@ export default async function Page({
 }) {
   const { id } = await params;
   const raw = await fetch(
-    "https://api.github.com/repos/HiroSpark/articles/contents/articles/" + id,
+    "https://api.github.com/repos/HiroSpark/articles/contents/articles/" + id + ".md",
   ).then((res) => res.json());
   const markdown = Buffer.from(raw.content, "base64").toString();
   const { data, content } = matter(markdown);
