@@ -30,7 +30,9 @@ export default async function Home() {
           <p>
             <a
               href="https://zenn.dev/hirospark"
-              className="flex gap-1 flex-row content-center transition delay-10 duration-200 ease-[ease] hover:transform-[translateX(4px)]"
+              target="_blank"
+              rel="noopener noreferer"
+              className="flex gap-1 flex-row items-center transition delay-10 duration-200 ease-[ease] hover:transform-[translateX(4px)]"
             >
               <Image src="/arrow-right.svg" alt="" height={18} width={18} />
               Zenn
@@ -39,7 +41,9 @@ export default async function Home() {
           <p>
             <a
               href="https://github.com/HiroSpark"
-              className="flex gap-1 flex-row content-center transition delay-100 duration-200 ease-[ease] hover:transform-[translateX(4px)]"
+              target="_blank"
+              rel="noopener noreferer"
+              className="flex gap-1 flex-row items-center transition delay-100 duration-200 ease-[ease] hover:transform-[translateX(4px)]"
             >
               <Image src="/arrow-right.svg" alt="" height={18} width={18} />
               GitHub
