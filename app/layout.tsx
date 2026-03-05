@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Link from "next/link";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +30,9 @@ export default function RootLayout({
       >
         <div className="flex min-h-screen items-center justify-center font-sans bg-zinc-100">
           <main className="max-w-xl min-h-screen w-full px-6">
-            <h1 className="font-bold text-2xl my-12">HiroSpark</h1>
+            <h1 className="font-bold text-2xl my-12">
+              <Link href="/">HiroSpark</Link>
+            </h1>
             {children}
           </main>
         </div>
