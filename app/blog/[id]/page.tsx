@@ -51,7 +51,7 @@ export async function generateStaticParams() {
       repo: "articles",
       path: "articles",
     })
-    .then((res) => res.data)
+    .then((res) => res.data);
 
   if (!Array.isArray(posts)) {
     throw new Error("Expected list of files from GitHub API");
@@ -77,7 +77,10 @@ export default async function Page({
       repo: "articles",
       path: "articles/" + id + ".md",
     })
-    .then((res) => res.data)
+    .then((res) => res.data);
+  if (!("content" in raw)) {
+    throw new Error("GitHub APIのリクエストに失敗");
+  }
   const markdown = Buffer.from(raw.content, "base64").toString();
   const { data, content } = matter(markdown);
   const html = await unified()
@@ -96,7 +99,7 @@ export default async function Page({
   return (
     <div>
       <h1 className="text-2xl font-bold mb-6">{data.title}</h1>
-      <article dangerouslySetInnerHTML={{ __html: html }} className="content"/>
+      <article dangerouslySetInnerHTML={{ __html: html }} className="content" />
       <footer className="my-8">
         <div className="font-semibold flex gap-6">
           <p>
