@@ -18,22 +18,22 @@ const ALERT_START = ":::message alert\n";
 
 const BLOCK_END = "\n:::";
 
-const removeIdentifer = (child, identifer) =>
-  child.value.replace(identifer, "");
+const removeIdentifier = (child, identifier) =>
+  child.value.replace(identifier, "");
 
 const zennBlockParser = () => {
   return (tree) => {
     unistVisit(tree, "paragraph", (node, index, parent) => {
-      for (const startIdentifer of [MESSAGE_START, ALERT_START]) {
+      for (const startIdentifier of [MESSAGE_START, ALERT_START]) {
         const children = node.children;
         const firstChild = children[0];
         const lastChild = children[children.length - 1];
         if (
-          firstChild.value?.startsWith(startIdentifer) &&
+          firstChild.value?.startsWith(startIdentifier) &&
           lastChild.value?.endsWith(BLOCK_END)
         ) {
-          firstChild.value = removeIdentifer(firstChild, startIdentifer);
-          lastChild.value = removeIdentifer(lastChild, BLOCK_END);
+          firstChild.value = removeIdentifier(firstChild, startIdentifier);
+          lastChild.value = removeIdentifier(lastChild, BLOCK_END);
           parent.children[index] = {
             type: "blockquote",
             children: [{ type: "paragraph", children }],
@@ -106,7 +106,7 @@ export default async function Page({
             <a
               href="https://zenn.dev/hirospark"
               target="_blank"
-              rel="noopener noreferer"
+              rel="noopener noreferrer"
               className="flex gap-1 flex-row items-center transition delay-10 duration-200 ease-[ease] hover:transform-[translateX(4px)]"
             >
               <Image src="/arrow-right.svg" alt="" height={18} width={18} />
@@ -117,7 +117,7 @@ export default async function Page({
             <a
               href="https://github.com/HiroSpark"
               target="_blank"
-              rel="noopener noreferer"
+              rel="noopener noreferrer"
               className="flex gap-1 flex-row items-center transition delay-100 duration-200 ease-[ease] hover:transform-[translateX(4px)]"
             >
               <Image src="/arrow-right.svg" alt="" height={18} width={18} />
