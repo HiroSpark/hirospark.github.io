@@ -9,6 +9,8 @@ import Image from "next/image";
 
 import octokit from "@/libs/octokit";
 
+import type { Root, Text } from "mdast";
+
 // zenn独自記法に対応するパーサー（昔書いたもののコピー）
 
 import { visit as unistVisit } from "unist-util-visit";
@@ -18,19 +20,26 @@ const ALERT_START = ":::message alert\n";
 
 const BLOCK_END = "\n:::";
 
-const removeIdentifier = (child, identifier) =>
+const removeIdentifier = (child: { value: string }, identifier: string) =>
   child.value.replace(identifier, "");
 
+const isText = (node: unknown): node is Text => (node as Text).type === "text";
+
 const zennBlockParser = () => {
-  return (tree) => {
+  return (tree: Root) => {
     unistVisit(tree, "paragraph", (node, index, parent) => {
+      if (parent === undefined || index === undefined) return;
       for (const startIdentifier of [MESSAGE_START, ALERT_START]) {
         const children = node.children;
+        if (children.length === 0) return;
         const firstChild = children[0];
         const lastChild = children[children.length - 1];
+
+        // first/lastChildがText型じゃないときはMESSAGE/ALERTどっちにもならないのでコールバック抜けてOK
+        if (!isText(firstChild) || !isText(lastChild)) return;
         if (
-          firstChild.value?.startsWith(startIdentifier) &&
-          lastChild.value?.endsWith(BLOCK_END)
+          firstChild.value.startsWith(startIdentifier) &&
+          lastChild.value.endsWith(BLOCK_END)
         ) {
           firstChild.value = removeIdentifier(firstChild, startIdentifier);
           lastChild.value = removeIdentifier(lastChild, BLOCK_END);
