@@ -6,6 +6,9 @@ import remarkGfm from "remark-gfm";
 import remarkRehype from "remark-rehype";
 import rehypeShiki from "@shikijs/rehype";
 
+import { RequestError } from "octokit";
+
+import { notFound } from "next/navigation";
 import Image from "next/image";
 
 import octokit from "@/libs/octokit";
@@ -77,7 +80,7 @@ export async function generateStaticParams() {
     .then((res) => res.data);
 
   if (!Array.isArray(posts)) {
-    throw new Error("Expected list of files from GitHub API");
+    throw new Error("レスポンスが配列ではない");
   }
 
   return posts.map((post) => {
@@ -100,9 +103,13 @@ export default async function Page({
       repo: "articles",
       path: `articles/${id}.md`,
     })
-    .then((res) => res.data);
-  if (!("content" in raw)) {
-    throw new Error("GitHub APIのリクエストに失敗");
+    .then((res) => res.data)
+    .catch((e) => {
+      if (e instanceof RequestError && e.status === 404) notFound(); // 404ページを出す
+      throw e; // errorページを出す
+    });
+  if (Array.isArray(raw) || raw.type !== "file") {
+    throw new Error(`レスポンス型が不正`);
   }
   const markdown = Buffer.from(raw.content, "base64").toString();
   const { data, content } = matter(markdown);
