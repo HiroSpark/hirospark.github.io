@@ -9,7 +9,7 @@ export default function NotFound() {
         <p>
           <Link
             href="/"
-            className="flex gap-1 flex-row items-center transition delay-10 duration-200 ease-[ease] hover:transform-[translateX(4px)] font-semibold"
+            className="flex gap-1 flex-row items-center transition delay-100 duration-200 ease-[ease] hover:transform-[translateX(4px)] font-semibold"
           >
             <Image src="/arrow-right.svg" alt="" height={18} width={18} />
             トップページへ戻る

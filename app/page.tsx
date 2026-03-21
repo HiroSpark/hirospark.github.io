@@ -38,7 +38,7 @@ export default async function Home() {
               href="https://zenn.dev/hirospark"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex gap-1 flex-row items-center transition delay-10 duration-200 ease-[ease] hover:transform-[translateX(4px)]"
+              className="flex gap-1 flex-row items-center transition delay-100 duration-200 ease-[ease] hover:transform-[translateX(4px)]"
             >
               <Image src="/arrow-right.svg" alt="" height={18} width={18} />
               Zenn
