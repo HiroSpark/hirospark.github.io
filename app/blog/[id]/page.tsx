@@ -8,6 +8,8 @@ import rehypeShiki from "@shikijs/rehype";
 
 import { RequestError } from "octokit";
 
+import { cache } from "react";
+
 import { notFound } from "next/navigation";
 import Image from "next/image";
 
@@ -70,6 +72,26 @@ const mdToHtml = unified()
   .use(rehypeStringify)
   .freeze();
 
+const getPost = cache(async (id: string) => {
+  const raw = await octokit
+    .request("GET /repos/{owner}/{repo}/contents/{path}", {
+      owner: "HiroSpark",
+      repo: "articles",
+      path: `articles/${id}.md`,
+    })
+    .then((res) => res.data)
+    .catch((e) => {
+      if (e instanceof RequestError && e.status === 404) notFound(); // 404ページを出す
+      throw e; // errorページを出す
+    });
+  if (Array.isArray(raw) || raw.type !== "file") {
+    throw new Error(`レスポンス型が不正`);
+  }
+  const markdown = Buffer.from(raw.content, "base64").toString();
+  const { data, content } = matter(markdown);
+  return { data, content };
+});
+
 export async function generateStaticParams() {
   const posts = await octokit
     .request("GET /repos/{owner}/{repo}/contents/{path}", {
@@ -91,28 +113,25 @@ export async function generateStaticParams() {
   });
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const { data } = await getPost(id);
+  return {
+    title: data.title,
+  };
+}
+
 export default async function Page({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const raw = await octokit
-    .request("GET /repos/{owner}/{repo}/contents/{path}", {
-      owner: "HiroSpark",
-      repo: "articles",
-      path: `articles/${id}.md`,
-    })
-    .then((res) => res.data)
-    .catch((e) => {
-      if (e instanceof RequestError && e.status === 404) notFound(); // 404ページを出す
-      throw e; // errorページを出す
-    });
-  if (Array.isArray(raw) || raw.type !== "file") {
-    throw new Error(`レスポンス型が不正`);
-  }
-  const markdown = Buffer.from(raw.content, "base64").toString();
-  const { data, content } = matter(markdown);
+  const { data, content } = await getPost(id);
   const html = await mdToHtml.process(content).then((res) => res.value);
 
   return (
